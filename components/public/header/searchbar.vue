@@ -16,7 +16,9 @@
             v-model="search"
             placeholder="搜素商家地点"
             @focus="focus"
-            @blur="blur"/>
+            @blur="blur"
+            @input="input"
+          />
           <button 
             class="el-button el-button--primary"><i class="el-icon-search"/></button>
           <dl
@@ -34,7 +36,7 @@
           >
             <dd 
               v-for="(item,index) in seacherList" 
-              :key="index">{{ item }}
+              :key="index">{{ item.name }}
             </dd>
           </dl>
         </div>
@@ -83,7 +85,7 @@ export default {
       search: '',
       isFocus: false,
       hotWord: ['火锅', '酒店', '飞机'],
-      seacherList: ['博物馆', '博物馆', '博物馆', '博物馆']
+      seacherList: []
     }
   },
   computed: {
@@ -96,13 +98,26 @@ export default {
   },
   methods: {
     focus() {
-      this.isFocus = true
+      this.isFocus = true,
+      console.info(this.seacherList)
     },
     blur() {
       setTimeout(() => {
         this.isFocus = false
       }, 200)
-    }
+    },
+    input:_.debounce(async function(){
+      let self = this
+      let city = self.$store.state.geo.position.city.replace('市','')
+      let input = this.search
+      let {status,data:{top}} = await self.$axios.get('search/top',{
+        params:{
+          input,
+          city
+        }
+      })
+      this.seacherList = top.slice(0,6)
+    },500)
   }
 }
 </script>

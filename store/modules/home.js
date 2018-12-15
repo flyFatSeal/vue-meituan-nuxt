@@ -1,6 +1,7 @@
 const state = () => ({
   menu: [],
-  hotPlace: []
+  hotPlace: [],
+  searchList: []
 })
 
 const mutations = {
@@ -9,15 +10,27 @@ const mutations = {
   },
   setHotPlace(state, val) {
     state.hotPlace = val
+  },
+  setSearchList(state, val) {
+    state.searchList = val
   }
 }
 
 const actions = {
-  setMenu: ({ commit }, menu) => {
+  setMenu: ({
+    commit
+  }, menu) => {
     commit('setMenu', menu)
   },
-  setHotPlace: ({ commit }, hotPlace) => {
+  setHotPlace: ({
+    commit
+  }, hotPlace) => {
     commit('setHotPlace', hotPlace)
+  },
+  setSearchList: ({
+    commit
+  }, searchList) => {
+    commit('setSearchList', searchList)
   }
 }
 
