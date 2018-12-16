@@ -42,13 +42,6 @@ const store = () =>
           }
         } = await app.$axios.get('/geo/menu')
         commit("home/setMenu", status2 === 200 ? menu : [])
-        const {
-          status: status3,
-          data: {
-            top
-          }
-        } = await app.$axios.get('/search/top')
-        commit('home/setSearchList', status3 === 200 ? top : [])
       }
     }
   });

@@ -13,7 +13,7 @@ router.get('/top', async ctx => {
     data: {
       top
     }
-  } = await axios.get(`http://cp-tools.cn/top`, {
+  } = await axios.get(`http://cp-tools.cn/search/top`, {
     params: {
       city: ctx.query.city,
       input: ctx.query.input,

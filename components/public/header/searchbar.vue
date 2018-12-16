@@ -98,25 +98,27 @@ export default {
   },
   methods: {
     focus() {
-      this.isFocus = true,
-      console.info(this.seacherList)
+      this.isFocus = true
     },
     blur() {
       setTimeout(() => {
         this.isFocus = false
+        this.searchList = []
       }, 200)
     },
     input:_.debounce(async function(){
       let self = this
       let city = self.$store.state.geo.position.city.replace('市','')
       let input = this.search
-      let {status,data:{top}} = await self.$axios.get('search/top',{
+      if(input !== ''){
+        let {status,data:{top}} = await self.$axios.get('search/top',{
         params:{
           input,
           city
         }
       })
-      this.seacherList = top.slice(0,6)
+      this.seacherList = top.slice(0,10)
+      }
     },500)
   }
 }
