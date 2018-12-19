@@ -27,7 +27,7 @@
             <dt>热门搜索</dt>
             <dd 
               v-for="(item,index) in hotWord" 
-              :key="index">{{ item }}
+              :key="index">{{ item.name }}
             </dd>
           </dl>
           <dl
@@ -84,7 +84,7 @@ export default {
     return {
       search: '',
       isFocus: false,
-      hotWord: ['火锅', '酒店', '飞机'],
+      hotWord: [],
       seacherList: []
     }
   },
@@ -94,7 +94,18 @@ export default {
     },
     isSeacherList() {
       return this.isFocus && this.search
+    },
+    isChangeCity(){
+      return this.$store.state.geo.position.city
     }
+  },
+  watch: {
+     isChangeCity(newCity){
+      this.setHot()
+    }
+  },
+   created () {
+    this.setHot()
   },
   methods: {
     focus() {
@@ -106,19 +117,31 @@ export default {
         this.searchList = []
       }, 200)
     },
+    async getHot(){
+      let self = this
+      let city = self.$store.state.geo.position.city.replace('市','')
+      let {status,data:{result}} = await self.$axios.get('search/hotPlace',{
+        params:{
+          city
+        }
+      })
+      return result
+    },
+    async setHot(){
+      this.hotWord = await this.getHot()
+      this.hotWord = this.hotWord.slice(0,4)
+    },
     input:_.debounce(async function(){
       let self = this
       let city = self.$store.state.geo.position.city.replace('市','')
       let input = this.search
-      if(input !== ''){
-        let {status,data:{top}} = await self.$axios.get('search/top',{
+      let {status,data:{top}} = await self.$axios.get('search/top',{
         params:{
           input,
           city
         }
       })
       this.seacherList = top.slice(0,10)
-      }
     },500)
   }
 }

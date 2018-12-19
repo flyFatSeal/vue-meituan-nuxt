@@ -23,7 +23,7 @@ export default {
   },
   async mounted() {
     const { status, data } = await this.$axios.get('/users/getUser')
-    if (status === 200 && data) this.user = data.user
+    if (status === 200 && data) this.user = decodeURIComponent(data.user)
   }
 }
 </script>
