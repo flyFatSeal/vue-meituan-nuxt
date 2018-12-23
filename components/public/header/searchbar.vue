@@ -20,14 +20,15 @@
             @input="input"
           />
           <button 
-            class="el-button el-button--primary"><i class="el-icon-search"/></button>
+            class="el-button el-button--primary"
+            @click="searchKeyword"><i class="el-icon-search"/></button>
           <dl
             v-show="isHotPlace" 
             class="hotPlace">
             <dt>热门搜索</dt>
             <dd 
               v-for="(item,index) in hotWord" 
-              :key="index">{{ item.name }}
+              :key="index"><a :href="'/products?city='+encodeURIComponent(isChangeCity)+'&keyword='+encodeURIComponent(item.name)">{{ item.name }}</a>
             </dd>
           </dl>
           <dl
@@ -36,7 +37,7 @@
           >
             <dd 
               v-for="(item,index) in seacherList" 
-              :key="index">{{ item.name }}
+              :key="index"><a :href="'/products?keyword='+encodeURIComponent(item.name)">{{ item.name }}</a>
             </dd>
           </dl>
         </div>
@@ -96,7 +97,7 @@ export default {
       return this.isFocus && this.search
     },
     isChangeCity(){
-      return this.$store.state.geo.position.city
+      return this.$store.state.geo.position.city.replace('市','')
     }
   },
   watch: {
@@ -108,6 +109,10 @@ export default {
     this.setHot()
   },
   methods: {
+    searchKeyword(){
+      console.log(this.search)
+      this.$router.push('/products?city='+encodeURIComponent(this.$store.state.geo.position.city.replace('市',''))+'&keyword='+encodeURIComponent(this.search))
+    },
     focus() {
       this.isFocus = true
     },
@@ -133,6 +138,7 @@ export default {
     },
     input:_.debounce(async function(){
       let self = this
+      this.seacherList = ''
       let city = self.$store.state.geo.position.city.replace('市','')
       let input = this.search
       let {status,data:{top}} = await self.$axios.get('search/top',{
