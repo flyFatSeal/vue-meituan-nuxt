@@ -174,7 +174,6 @@ export default {
       }
     },
     register() {
-      console.log(1)
       let self = this
       this.$refs['ruleForm'].validate(valid => {
         if (valid) {
@@ -197,7 +196,6 @@ export default {
                 self.error = `服务器出错，错误码:${status}`
               }
               setTimeout(function() {
-                console.info('settime')
                 self.error = ''
               }, 1500)
             })
